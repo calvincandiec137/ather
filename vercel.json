@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/tsdc/:match*",
+      "destination": "http://164.52.211.24/tsdc/:match*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
