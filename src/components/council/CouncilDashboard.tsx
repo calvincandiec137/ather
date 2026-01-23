@@ -37,7 +37,6 @@ export function CouncilDashboard() {
   // Navigation Items for Right Rail
   const navItems = [
     { id: 'chat', label: 'Chat', icon: <ChatIcon className="w-8 h-8" /> },
-    { id: 'agents', label: 'Agents', icon: <AgentIcon className="w-8 h-8" /> },
     { id: 'debate', label: 'Debate', icon: <DebateIcon className="w-8 h-8" /> },
     { id: 'peer-review', label: 'Review', icon: <ReviewIcon className="w-8 h-8" /> },
     { id: 'verdict', label: 'Verdict', icon: <VerdictIcon className="w-8 h-8" /> },
@@ -106,7 +105,7 @@ export function CouncilDashboard() {
       {/* MIDDLE COLUMN: Main Content */}
       <div className="flex-1 flex flex-col min-w-0 relative h-full bg-main-bg">
         {/* Desktop Header / Status Bar */}
-        <div className="hidden md:flex items-center p-4 pb-2 gap-4">
+        <div className="hidden md:flex items-center p-6 pb-4 gap-6">
            <button 
              onClick={toggleSidebar}
              className="p-2 rounded-full hover:bg-muted/50 text-muted-foreground transition-colors"
@@ -141,52 +140,8 @@ export function CouncilDashboard() {
                </div>
             </div>
 
-            {/* AGENTS TAB - Tabular/Grid Structure */}
-            <div className={cn("absolute inset-0 p-2 md:p-4 transition-opacity duration-300 pb-20 md:pb-4", currentTab === 'agents' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none")}>
-              <div className="h-full glass-surface flex flex-col overflow-hidden p-4 md:p-6 shadow-sm">
-                  {isProcessing && (!currentRun?.agents || currentRun.agents.length === 0) ? (
-                     <div className="flex flex-col items-center justify-center h-full gap-4">
-                         <div className="w-12 h-12 rounded-full border-4 border-primary/30 border-t-primary animate-spin" />
-                         <p className="text-muted-foreground animate-pulse">Summoning Council Members...</p>
-                     </div>
-                  ) : currentRun?.agents && currentRun.agents.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 h-full overflow-y-auto pr-2">
-                        {currentRun.agents.map((agent) => (
-                        <div key={agent.agentId} className={cn(
-                            "flex flex-col p-4 md:p-5 rounded-2xl border transition-all duration-300 hover:shadow-md",
-                            "bg-white/50 backdrop-blur-sm",
-                            agent.team === 'pro' ? "border-teal-500/20" : "border-rose-500/20"
-                        )}>
-                            <div className="flex items-center gap-3 mb-4 border-b border-border/50 pb-3">
-                                <div className={cn(
-                                    "w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-sm font-bold",
-                                    agent.team === 'pro' ? "bg-teal-100 text-teal-700" : "bg-rose-100 text-rose-700"
-                                )}>
-                                    {agent.agentId.charAt(0).toUpperCase()}
-                                </div>
-                                <div>
-                                    <h3 className="font-bold text-foreground text-lg leading-tight">{agent.agentName}</h3>
-                                    <span className={cn(
-                                        "text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full",
-                                         agent.team === 'pro' ? "bg-teal-50 text-teal-600" : "bg-rose-50 text-rose-600"
-                                    )}>{agent.team}</span>
-                                </div>
-                            </div>
-                            <div className="flex-1 overflow-y-auto pr-1">
-                                <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">
-                                    {agent.response}
-                                </p>
-                            </div>
-                        </div>
-                        ))}
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center h-full opacity-50">
-                        <p>No agents active.</p>
-                    </div>
-                  )}
-              </div>
-            </div>
+            {/* AGENTS TAB REMOVED */ }
+
 
             {/* DEBATE TAB */}
             <div className={cn("absolute inset-0 p-2 md:p-4 transition-opacity duration-300 pb-20 md:pb-4", currentTab === 'debate' ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none")}>
@@ -327,7 +282,7 @@ export function CouncilDashboard() {
                             : "bg-transparent text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                     )}
                     disabled={
-                        (item.id === 'agents' && currentRun?.agents.length === 0 && !isProcessing) ||
+
                         (item.id === 'debate' && currentRun?.debate.length === 0 && !isProcessing) ||
                         (item.id === 'peer-review' && !currentRun?.peerReview && !isProcessing) ||
                         (item.id === 'verdict' && !currentRun?.verdict && !isProcessing)
@@ -356,7 +311,6 @@ export function CouncilDashboard() {
                         : "text-muted-foreground"
                 )}
                 disabled={
-                        (item.id === 'agents' && currentRun?.agents.length === 0 && !isProcessing) ||
                         (item.id === 'debate' && currentRun?.debate.length === 0 && !isProcessing) ||
                         (item.id === 'peer-review' && !currentRun?.peerReview && !isProcessing) ||
                         (item.id === 'verdict' && !currentRun?.verdict && !isProcessing)

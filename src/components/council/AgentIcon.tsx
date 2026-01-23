@@ -6,6 +6,7 @@ interface AgentIconProps {
   status: AgentStatus;
   size?: 'sm' | 'md' | 'lg';
   showPulse?: boolean;
+  className?: string;
 }
 
 const agentConfig: Record<AgentId, { icon: string }> = {
@@ -21,13 +22,13 @@ const sizeClasses = {
   lg: 'w-10 h-10 text-base',
 };
 
-export function AgentIcon({ agentId, status, size = 'md', showPulse = true }: AgentIconProps) {
+export function AgentIcon({ agentId, status, size = 'md', showPulse = true, className }: AgentIconProps) {
   const config = agentConfig[agentId];
   const isThinking = status === 'thinking';
   const isComplete = status === 'complete';
   
   return (
-    <div className="relative">
+    <div className={cn("relative", className)}>
       {/* Pulsing rings when thinking */}
       {isThinking && showPulse && (
         <>

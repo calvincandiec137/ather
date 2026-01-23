@@ -278,7 +278,7 @@ export function useCouncil() {
         const tldrMessage: Message = {
             id: generateId(),
             role: 'council',
-            content: tldrContent,
+            content: tldrContent + " ...for a detailed answer check the verdict section",
             timestamp: new Date(),
         };
 
