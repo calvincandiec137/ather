@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { Agent, AgentId, Session, SessionPhase, Message, Factor, DebateMessage, AgentTeam, DebateRun, AgentResponse, UploadedDocument, PeerReview } from '@/types/council';
-import { processQuery } from '@/lib/api';
+import { processQuery, getTLDR } from '@/lib/api';
 
 const initialAgents: Agent[] = [
   { id: 'alpha', name: 'Alpha', icon: '✦', status: 'idle', reasoning: '', team: 'pro' },
@@ -256,30 +256,43 @@ export function useCouncil() {
         status: 'complete',
       };
 
-      // Update session with completed run
+      setAgents(prev => prev.map(a => ({ ...a, status: 'complete' })));
+
+      // Call TLDR API
+      let tldrContent = '';
+      try {
+        const tldrRaw = await getTLDR(input, response.verdict || response.response || "No verdict available.");
+        // Robust Regex to remove "TL;DR", "**TL;DR:**", etc.
+        // Matches start of string, optional markdown bold/italic, "tl;dr" or "tldr", optional markdown, then separators
+        tldrContent = tldrRaw.replace(/^[\s\W]*tl[;:]?dr[\s\W]*/im, '').trim();
+      } catch (tldrError) {
+          console.error("Failed to fetch TLDR:", tldrError);
+          tldrContent = "Summary unavailable.";
+      }
+
+      // Update session with completed run AND TLDR message (no intermediate verdict message)
       setCurrentSession(prev => {
         if (!prev) return null;
         const updatedRuns = prev.debateRuns.map(r => r.id === runId ? updatedRun : r);
         
-        // Add council message to chat
-        const councilMessage: Message = {
-          id: generateId(),
-          role: 'council',
-          content: `Council analysis complete. Verdict: ${response.verdict || 'Analysis in progress'}`,
-          timestamp: new Date(),
+        const tldrMessage: Message = {
+            id: generateId(),
+            role: 'council',
+            content: tldrContent,
+            timestamp: new Date(),
         };
 
         return {
           ...prev,
           debateRuns: updatedRuns,
-          messages: [...prev.messages, councilMessage],
+          messages: [...prev.messages, tldrMessage],
           phase: 'complete',
           updatedAt: new Date(),
         };
       });
 
       setPhase('complete');
-      setAgents(prev => prev.map(a => ({ ...a, status: 'complete' })));
+
       
     } catch (error) {
       console.error('Error calling backend API:', error);
