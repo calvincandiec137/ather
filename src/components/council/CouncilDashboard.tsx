@@ -9,6 +9,7 @@ import { ChatHistory } from './ChatHistory';
 import { cn } from '@/lib/utils';
 import { AgentIcon } from '@/components/icons/AgentIcon';
 import { ChatIcon, DebateIcon, VerdictIcon, ReviewIcon } from '@/components/icons/NavIcons';
+import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer';
 
 export function CouncilDashboard() {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(true);
@@ -263,10 +264,8 @@ export function CouncilDashboard() {
                  <div className="h-full glass-surface flex flex-col overflow-hidden p-8 shadow-sm overflow-y-auto">
                      {currentRun?.verdict ? (
                          <div className="max-w-3xl mx-auto space-y-8">
-                             <div className="prose prose-slate prose-lg max-w-none">
-                                 <div className="whitespace-pre-wrap font-serif leading-loose text-foreground">
-                                     {currentRun.verdict}
-                                 </div>
+                             <div className="bg-transparent">
+                                 <MarkdownRenderer content={currentRun.verdict} />
                              </div>
                              {currentRun.sources && currentRun.sources.length > 0 && (
                                  <div className="bg-muted/30 p-6 rounded-xl border border-border">
@@ -301,7 +300,7 @@ export function CouncilDashboard() {
            For mobile: Fixed bottom, above the nav bar.
         */}
         <div className={cn(
-            "p-4 pt-0 transition-transform duration-300",
+            "p-4 pt-0 transition-transform duration-300 md:pb-0 pb-20", // Added pb-20 for mobile nav clearance
             // On mobile, if we are NOT in chat tab, maybe hide input to give more reading space?
             // "md:block", currentTab !== 'chat' ? "hidden md:block" : ""
         )}>

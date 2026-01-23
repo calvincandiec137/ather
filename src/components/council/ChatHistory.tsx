@@ -5,6 +5,7 @@ import { DebateMessageItem } from './DebateMessageItem';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, Users } from 'lucide-react';
+import { MarkdownRenderer } from '@/components/ui/MarkdownRenderer';
 
 interface ChatHistoryProps {
   messages: Message[];
@@ -37,9 +38,9 @@ export function ChatHistory({ messages, debateMessages, phase, containerRef }: C
                 <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
                   <span className="text-primary text-xs font-bold">AC</span>
                 </div>
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-2 min-w-0">
                    <h4 className="font-semibold text-sm text-foreground">Council Verdict</h4>
-                   <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                   <MarkdownRenderer content={message.content} className="text-sm prose-p:leading-normal bg-transparent" />
                 </div>
               </div>
             )}
